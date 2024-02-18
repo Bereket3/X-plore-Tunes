@@ -22,3 +22,10 @@ class MusicCreateAPIView(generics.CreateAPIView):
     queryset = Music
     serializer_class = MusicSerializer
     permission_classes = [IsAuthenticated]
+
+
+class MusicUpdateDeleteAndGetAPIView(generics.DestroyAPIView, generics.UpdateAPIView, generics.RetrieveAPIView):
+    lookup_field = 'id'
+    queryset = Music
+    serializer_class = MusicSerializer
+    permission_classes = [IsAuthenticated]

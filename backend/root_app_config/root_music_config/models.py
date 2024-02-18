@@ -13,10 +13,11 @@ class MusicContainer(models.Model):
     stream = models.ForeignKey(User, on_delete = models.CASCADE, blank = True, null = True, related_name = 'music_total_stream')
     music_file = models.FileField(upload_to='music_files/audio/')
     length = models.TimeField(blank = True, null = True)
-    replays = models.IntegerField()
+    replays = models.IntegerField(default = 0, blank =True, null = True)
     sample_rate = models.FloatField( default = 0.0)
     genre = models.CharField(max_length = 128, default = '')
     music_cover_art = models.ImageField(upload_to='music_files/cover_art/',null = True, blank= True, default= None)
+
     created = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
  

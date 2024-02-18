@@ -4,11 +4,13 @@ from django.urls import path
 
 # project view applications
 from .views import (
-    MusicCreateAPIView
+    MusicCreateAPIView,
+    MusicUpdateDeleteAndGetAPIView
 )
 
 
 urlpatterns = [
     path('create/', MusicCreateAPIView.as_view(), name='create_music'),
+    path('<str:id>/', MusicCreateAPIView.as_view(), name="update-delete-and-get-music")
     
 ]
