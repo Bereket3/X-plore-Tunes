@@ -113,7 +113,7 @@ WSGI_APPLICATION = 'project_006.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'test',
+		'NAME': 'x_polre',
 		'USER': 'root',
 		'PASSWORD': '',
 		'HOST':'localhost',

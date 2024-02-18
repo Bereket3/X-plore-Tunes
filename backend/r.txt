@@ -8,3 +8,4 @@ django-environ
 drf_social_oauth2
 mysqlclient
 tinytag
+fastapi[all]
