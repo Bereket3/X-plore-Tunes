@@ -3,6 +3,10 @@ import sys, os
 import environ
 
 
+env = environ.Env(
+    DEBUG=(bool, True)
+)
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 # adding all the project apps into a root base folder
@@ -13,9 +17,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # the app will be using .env file in the production and sensitive information like these will be putted there
 # will be changed to .env file ones the app is ready for production
-DEBUG = False
-ALLOWED_HOSTS = []
-SECRET_KEY = 'django-insecure-^lqxda*0#kgp%x9dc4c!gh)3ae18y=b)5_)4rf76&0e7puw!ry'
+DEBUG = env('DEBUG')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
+SECRET_KEY = env('SECRET_KEY')
 
 
 # custom user model
@@ -109,11 +113,11 @@ WSGI_APPLICATION = 'project_006.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'x_polre',
-		'USER': 'root',
-		'PASSWORD': '',
-		'HOST':'localhost',
-		'PORT':'3306',
+		'NAME': env('NAME'),
+		'USER': env('USER'),
+		'PASSWORD': env('PASSWORD'),
+		'HOST': env('HOST'),
+		'PORT': env('PORT'),
         "OPTIONS": {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
             'charset': 'utf8mb4',
@@ -121,6 +125,7 @@ DATABASES = {
         }
 	}
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

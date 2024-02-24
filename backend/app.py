@@ -126,4 +126,4 @@ async def video_endpoint(_path: str, Range : Annotated[str | None, Header()] = N
             'Accept-Ranges': 'bytes'
         }
         
-        return Response(data, status_code=200,headers=headers, media_type="audio/mpeg")
+        return Response(data, status_code=200, headers=headers, media_type="audio/mpeg")

@@ -54,38 +54,3 @@ class UserProfileUpdateAPIView(generics.UpdateAPIView):
     queryset = User
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
-
-
-#-------------------- function based views -----------------------
-    
-
-@api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-def get_media_path(request, path) -> FileResponse:
-    """
-    The get_media_path function is a helper function that takes in the request and
-    path of a file. 
-    
-    It then checks if the file exists, and returns an error message if
-    it does not exist. 
-    
-    If it does exist, it will return an HttpResponse with the
-    correct headers to serve up the media.
-    
-    @param path: Determine the path of the file to be served
-    """
-    
-    if not os.path.exists(f"{settings.MEDIA_ROOT}/music_files/audio/{path}"):
-        return Response("No such file exists.", status=404)
-
-    # Guess the MIME type of a file. Like pdf/docx/xlsx/png/jpeg
-    mimetype, encoding = mimetypes.guess_type(f"{settings.MEDIA_ROOT}/music_files/audio/{path}", strict=True)
-    if not mimetype:
-        mimetype = "text/html"
-
-    # By default, percent-encoded sequences are decoded with UTF-8, and invalid
-    # sequences are replaced by a placeholder character.
-        
-    file_path = unquote(os.path.join(f"{settings.MEDIA_ROOT}/music_files/audio/{path}")).encode("utf-8")
-    
-    return FileResponse(open(file_path, "rb").read(), content_type=mimetype)
