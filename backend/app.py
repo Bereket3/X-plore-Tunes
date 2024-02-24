@@ -30,7 +30,6 @@ from root_music_config.models import MusicContainer as Music
 
 
 
-
 # Create FasatAPI instance
 app = FastAPI()
 
@@ -44,62 +43,8 @@ app.mount('/static',
    name='static',
 )
 
-# Define a FastAPI route
-@app.get('/fastapi-test')
-def read_main():
-    return {
-        'total_accounts': Music.objects.count(),
-        'is_debug': settings.DEBUG
-    }
-
 # Mount Django app
 app.mount('/django-test', WSGIMiddleware(django_app))
-
-# BYTES_PER_RESPONSE = 100000
-
-
-# def chunk_generator_from_stream(stream, chunk_size, start, size):
-#     bytes_read = BYTES_PER_RESPONSE
-#     with open(stream, 'rb') as stream:
-
-#         stream.seek(start)
-
-#         stream.read()
-#         while bytes_read < int(size):
-#             bytes_to_read = min(chunk_size, size - bytes_read)
-#             print(bytes_to_read)
-#             yield stream.read(bytes_to_read)
-#             bytes_read = bytes_read + bytes_to_read
-
-#     stream.close()
-
-
-# @app.get("/audio/{_path}")
-# def stream(_path: str, req: Request):
-#     asked = req.headers.get("Range")
-
-#     stream  = Path(BASE_DIR / f'media/music_files/audio/{_path}.mp3')
-    
-#     total_size = int(stream.stat().st_size)
-
-#     start_byte_requested = int(asked.replace('bytes=','').split('-')[0])
-#     end_byte_planned = min(start_byte_requested + BYTES_PER_RESPONSE, total_size)
-
-#     chunk_generator = chunk_generator_from_stream(
-#         stream,
-#         chunk_size=10000,
-#         start=start_byte_requested,
-#         size=BYTES_PER_RESPONSE
-#     )
-#     return StreamingResponse(
-#         chunk_generator,
-#         headers={
-#             "Accept-Ranges": "bytes",
-#             "Content-Range": f"bytes {start_byte_requested}-{end_byte_planned}/{total_size}",
-#             "Content-Type": "audio/mpeg"
-#         },
-#         status_code=206
-#     )
 
 
 @app.get("/audio/{_path}")
