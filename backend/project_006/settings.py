@@ -1,16 +1,19 @@
 from pathlib import Path
 import sys, os
+import environ
 
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 # adding all the project apps into a root base folder
 sys.path.insert(0, os.path.join(BASE_DIR, 'root_app_config'))
+# setting an environment variavble
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # the app will be using .env file in the production and sensitive information like these will be putted there
 # will be changed to .env file ones the app is ready for production
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = []
 SECRET_KEY = 'django-insecure-^lqxda*0#kgp%x9dc4c!gh)3ae18y=b)5_)4rf76&0e7puw!ry'
 

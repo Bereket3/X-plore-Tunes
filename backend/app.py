@@ -112,7 +112,6 @@ async def video_endpoint(_path: str, Range : Annotated[str | None, Header()] = N
     except:
         start = 0
         end = 0
-    print(start, end)
 
     with open(video_path, "rb") as audio:
         audio.seek(start)
