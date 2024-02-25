@@ -12,7 +12,7 @@ class MusicContainer(models.Model):
     likes = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'music_object_likes', blank = True, null=True)
     stream = models.ForeignKey(User, on_delete = models.CASCADE, blank = True, null = True, related_name = 'music_total_stream')
     music_file = models.FileField(upload_to='music_files/audio/')
-    length = models.TimeField(blank = True, null = True)
+    length = models.FloatField(blank = True, null = True, default = 0.0)
     replays = models.IntegerField(default = 0, blank =True, null = True)
     sample_rate = models.FloatField( default = 0.0)
     genre = models.CharField(max_length = 128, default = '')

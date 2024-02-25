@@ -1,18 +1,20 @@
 const express = require("express");
-const app = express();
 const fs = require("fs");
 const path = require('path')
-const mysql = require('mysql')
+const mysql = require('mysql2')
 const crypto = require('crypto')
 
 
-var connection = mysql.createConnection({
+const app = express();
+
+
+var connection = mysql.createPool({
     database: process.env.NAME,
     user: process.env.USER,
     password: process.env.PASSWORD,
     host: process.env.HOST,
-    port: process.env.POST,  
-  });
+    port: process.env.POST,
+});
 
 
 
@@ -29,6 +31,7 @@ app.get("/video/:audio", function (req, res) {
     const range = req.headers.range;
     const param = req.params.audio;
     const isLogdIn = handelAuth(req.headers);
+
 
     if(!isLogdIn){
         return res.status(401).send("Invalid Token");
@@ -74,15 +77,20 @@ function handelAuth (headers) {
         return 'Authentication credentials were not provided.';
     }
     token = Bearer.split(' ')
-    connection.connect(function(err) {
-        if (err) throw err;
-        connection.query('SELECT * FROM oauth2_provider_accesstoken WHERE `token` = ?', token[1], function (err, result, fields) {
-          if (err) {
-            return false;
-          };
-          console.log(result);
-        });
-      });
+    if(token.length < 2){
+        return 'Invalid token';
+    }
+    
+    const queryObject = connection.query('SELECT * FROM oauth2_provider_accesstoken WHERE `token` = ?', 
+        token[1], 
+        function (err, result, fields) {
+            if (err) {
+                return false;
+            };
+            return result;
+    });
+    return queryObject;
+    
 }
 
 app.listen(8000, function () {

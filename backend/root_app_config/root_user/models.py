@@ -58,7 +58,6 @@ class AuthUserModel(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=200, unique=True)
     email = models.EmailField(_('email address'), unique=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', null=True, blank=True)
-    profile_picture = models.ImageField(upload_to='', null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default = True)

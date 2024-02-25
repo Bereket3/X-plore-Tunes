@@ -6,6 +6,7 @@ urlpatterns = [
     path('auth/' , include("drf_social_oauth2.urls", namespace='drf')),
     path('api_root/auth/', include('root_user.urls')),
     path('api_root/music/', include('root_music_config.urls'))
+    
 ]
 
 urlpatterns += [

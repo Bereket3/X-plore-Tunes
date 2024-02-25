@@ -113,6 +113,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
     def validate(self, attrs):
+        """
+        Custom validation for password validation and mismatch in password
+
+        return the error as a reponse to the frontend
+        """
         password = validate_password(attrs['password'])
         messages = {}
         if password:
