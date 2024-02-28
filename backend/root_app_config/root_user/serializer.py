@@ -6,12 +6,17 @@ from django.contrib.auth import get_user_model
 
 # rest frame work imports
 from rest_framework import serializers
+from rest_framework.serializers import CharField
 from rest_framework.validators import UniqueValidator
 
 # custom made imports
 from .validate_password import validate_password
 
 User = get_user_model()
+
+
+class TokenValidation(serializers.Serializer):
+    token = CharField(max_length=2000)
 
 
 class UserSerializer(serializers.ModelSerializer):

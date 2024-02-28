@@ -1,26 +1,14 @@
 const express = require("express");
 const fs = require("fs");
 const path = require('path')
-const mysql = require('mysql2')
-const crypto = require('crypto')
 
 
 const app = express();
 
 
-var connection = mysql.createPool({
-    database: process.env.NAME,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    host: process.env.HOST,
-    port: process.env.POST,
-});
-
-
-
-app.get("/video/:audio", function (req, res) {
+app.get("/video/:audio", async function (req, res) {
     /**
-     * end point to send all music files 
+     * End point to send all music files
      * It will take in a file name and return the music file by small chunk of size 1MB
      * 
      * 
@@ -30,28 +18,43 @@ app.get("/video/:audio", function (req, res) {
     
     const range = req.headers.range;
     const param = req.params.audio;
-    const isLogdIn = handelAuth(req.headers);
+    const Bearer = req.headers.authorization;
 
+    if (!Bearer) {
+        return 'Authentication credentials were not provided.';
+    }
+
+    token = Bearer.split(' ');
+
+    if(token.length < 2){
+        return 'Invalid token';
+    }
+
+    const isLogdIn = await handelAuth(token);
 
     if(!isLogdIn){
         return res.status(401).send("Invalid Token");
     }
 
     if (!range) {
-        res.status(400).send("Requires Range header");
+        return res.status(400).send("Requires Range header");
     }
 
     const videoPath = path.resolve(__dirname, "../", `media/music_files/audio/${param}`);
 
     if(!fs.existsSync(videoPath)) {
-        res.status(404).send("The file you are looking for doesn't exist in the database");
+        return res.status(404).send({"detail":"The file you are looking for doesn't exist in the database"});
     }
 
     const videoSize = fs.statSync(videoPath).size;
     const CHUNK_SIZE = 1024*1024;
-
-    const start = Number(range.replace(/\D/g, ""));
+    const _splited = range.replace(/\D/g, ' ').split();
+    const start = Number(_splited[0]);
     const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
+
+    if(start >= videoSize){
+        return res.status(404).send({"detail":"Out of range"});
+    }
     
     const contentLength = end - start + 1;
     const headers = {
@@ -60,37 +63,50 @@ app.get("/video/:audio", function (req, res) {
         "Content-Length": contentLength,
         "Content-Type": "audio/mp3",
     };
+
     res.writeHead(206, headers);
-    const videoStream = fs.createReadStream(videoPath, { start, end });
+    const videoStream = fs.createReadStream(videoPath, {start, end });
     videoStream.pipe(res);
     
 });
 
 
-function handelAuth (headers) {
+async function handelAuth (token) {
     /**
      * 
-     * extract the header and check its token
+     * extract the header and check if the token is valid and return true if it is
+     * and false else wise
+     * 
+     * @param token: string
+     * 
+     * @returns boolean
      */
-    const Bearer = headers.authorization;
-    if (!Bearer) {
-        return 'Authentication credentials were not provided.';
-    }
-    token = Bearer.split(' ')
-    if(token.length < 2){
-        return 'Invalid token';
-    }
+
+    const BASE_URL = 'http://localhost:9100/api_root/auth/validate/';
+
+    const Options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            'token': token[1],
+        })
+    };
+
+    const message = await fetch(BASE_URL, Options)
+
+    .then((response) => {
+        return response.json()
+    })
+    .catch(err=> {
+        console.log('err', err)
+    })
     
-    const queryObject = connection.query('SELECT * FROM oauth2_provider_accesstoken WHERE `token` = ?', 
-        token[1], 
-        function (err, result, fields) {
-            if (err) {
-                return false;
-            };
-            return result;
-    });
-    return queryObject;
-    
+    if(message['message'] == true){
+        return true;
+    }
+    return false;
 }
 
 app.listen(8000, function () {
