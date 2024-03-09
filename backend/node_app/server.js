@@ -1,9 +1,11 @@
 const express = require("express");
 const fs = require("fs");
 const path = require('path')
+const cors = require('cors')
 
 
 const app = express();
+app.use(cors()); 
 
 
 app.get("/video/:audio", async function (req, res) {
@@ -18,23 +20,23 @@ app.get("/video/:audio", async function (req, res) {
     
     const range = req.headers.range;
     const param = req.params.audio;
-    const Bearer = req.headers.authorization;
+    // const Bearer = req.headers.authorization;
 
-    if (!Bearer) {
-        return 'Authentication credentials were not provided.';
-    }
+    // if (!Bearer) {
+    //     return 'Authentication credentials were not provided.';
+    // }
 
-    token = Bearer.split(' ');
+    // token = Bearer.split(' ');
 
-    if(token.length < 2){
-        return 'Invalid token';
-    }
+    // if(token.length < 2){
+    //     return 'Invalid token';
+    // }
 
-    const isLogdIn = await handelAuth(token);
+    // const isLogdIn = await handelAuth(token);
 
-    if(!isLogdIn){
-        return res.status(401).send("Invalid Token");
-    }
+    // if(!isLogdIn){
+    //     return res.status(401).send("Invalid Token");
+    // }
 
     if (!range) {
         return res.status(400).send("Requires Range header");
