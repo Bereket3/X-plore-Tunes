@@ -35,9 +35,11 @@ async handleSubmit(event){
      * 
      * 
      * @param event : object
+     * 
+     * TODO: Handeling error more elegantly
      */
+    event.preventDefault()
 	const { email, password} = this.state 
-	event.preventDefault()
     const BASE_URL = 'http://localhost:9100/api_root/auth/login/';
 
 
@@ -86,6 +88,9 @@ async handleSubmit(event){
          * @param refrash_token : string
          * 
          * @returns boolien
+         * 
+         * 
+         * TODO: handel login errors elegantly
          */
         const encriptedAccessToken = await encrypt(accessToken);
         const encriptedRefrashToken = await encrypt(refrasheToken);
@@ -100,7 +105,6 @@ async handleSubmit(event){
             // do something
         }
     } else {
-        // TODO: handel login errors elegantly
         alert('something went wrong')
     }
 	
