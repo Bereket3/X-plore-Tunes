@@ -38,8 +38,8 @@ async handleSubmit(event){
      * 
      * TODO: Handeling error more elegantly
      */
-    event.preventDefault()
-	const { email, password} = this.state 
+    event.preventDefault();
+	const { email, password } = this.state;
     const BASE_URL = 'http://localhost:9100/api_root/auth/login/';
 
 
@@ -56,7 +56,7 @@ async handleSubmit(event){
     let loginObjectData = Object.fromEntries(loginFormData)
     let bodyStr = JSON.stringify(loginObjectData)
 
-    console.log(bodyStr)
+    
     const options = {
         method: "POST",
         headers: {
@@ -112,11 +112,11 @@ async handleSubmit(event){
 
 handleChange(event){ 
 	this.setState({
-	[event.target.name] : event.target.value 
+	    [event.target.name] : event.target.value 
 	}) 
 } 
 
-render(){ 
+render(){
 	return( 
     <div className='card'>
         <div className=' card-header'>Login</div>
@@ -135,7 +135,7 @@ render(){
         </div>
     </div>
 	) 
-} 
+}
 } 
 
 export default Form;
